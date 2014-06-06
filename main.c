@@ -1,10 +1,12 @@
 #include <ctype.h>
 #include <curses.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "board.h"
 #include "define.h"
 #include "main.h"
+#include "player.h"
 
 void initScreen(WINDOW *w) {
 	cbreak();
@@ -16,42 +18,63 @@ void initScreen(WINDOW *w) {
 	printw("Game Number: 1\n\n");
 	printw("Game State\n");
 	printw("================================\n\n");
-	printw("      |   |   \n");
-	printw("      |   |   \n");
-	printw("      |   |   \n");
-	printw("   ---+---+---\n");
-	printw("      |   |   \n");
-	printw("      |   |   \n");
-	printw("      |   |   \n");
-	printw("   ---+---+---\n");
-	printw("      |   |   \n");
-	printw("      |   |   \n");
-	printw("      |   |   \n\n\n");
+
+  move(CURSOR_POSITION, 0);
 	printw(">");
 }
 
 int main(void) {
-	Board game;
 	char c = ERR;
 	char cmd_buffer[32];
 	int cmd_buffer_size = 0;
-	int game_number = 1;
 	WINDOW *w = initscr();
 
-	cmd_buffer[0] = '\0';
+	Board game;
+  Player p1, p2, *turn;
+	int game_number = 1, isPlaying = 0;
 
+	cmd_buffer[0] = '\0';
 	initScreen(w);
-	initBoard(&game, 1);
+	initBoard(&game, O_MOVE);
+  move(CURSOR_POSITION, 1);
+
+  initPlayer(&p1, &game, PTYPE_RANDOM, O_MOVE);
+  initPlayer(&p2, &game, PTYPE_RANDOM, X_MOVE);
+  turn = &p1;
+
+  for (int i = 0; i < 4; i++) {
+    p1.play(&p1);
+    p2.play(&p2);
+  }
 
 	FOREVER {
-		if (c == ERR &&
+    if (isPlaying) {
+      turn->play(turn); 
+
+      if (0) { // check if end game
+
+      } else if (turn == &p1) {
+        turn = &p2;
+      } else {
+        turn = &p1;
+      }
+    } else if (c == ERR &&
 				(c = getch()) != ERR) {
-			if (c == KEYBOARD_BACKSPACE) {
+      if (c == KEYBOARD_BACKSPACE && cmd_buffer_size > 0) {
 				move(21, cmd_buffer_size);
 				cmd_buffer[--cmd_buffer_size] = '\0';
 				delch();
 			} else if (c == KEYBOARD_RETURN) {
-				printw("dog");
+        if (cmd_buffer_size == 1 && cmd_buffer[0] == KEYBOARD_Q) {
+          endwin();
+          exit(0);
+        }
+
+        //TODO: process command
+        move(21, 1); 
+        clrtoeol();
+        cmd_buffer[0] = '\0';
+        cmd_buffer_size = 0;
 			} else if (isalnum(c)) {
 				cmd_buffer[cmd_buffer_size++] = c;
 				cmd_buffer[cmd_buffer_size] = '\0';
@@ -64,5 +87,6 @@ int main(void) {
 		}
 	}
 
-	return 0;
+  // Should never get here
+	return -1;
 }
