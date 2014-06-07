@@ -1,4 +1,5 @@
 #include <ctype.h>
+#include <unistd.h>
 #include <curses.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,33 +32,35 @@ int main(void) {
 
 	Board game;
   Player p1, p2, *turn;
-	int game_number = 1, isPlaying = 0;
+	int game_number = 0, isPlaying = 0;
 
 	cmd_buffer[0] = '\0';
 	initScreen(w);
-	initBoard(&game, O_MOVE);
   move(CURSOR_POSITION, 1);
-
-  initPlayer(&p1, &game, PTYPE_RANDOM, O_MOVE);
-  initPlayer(&p2, &game, PTYPE_RANDOM, X_MOVE);
-  turn = &p1;
-
-  for (int i = 0; i < 4; i++) {
-    p1.play(&p1);
-    p2.play(&p2);
-  }
 
 	FOREVER {
     if (isPlaying) {
       turn->play(turn); 
 
-      if (0) { // check if end game
-
-      } else if (turn == &p1) {
-        turn = &p2;
+      if (findWinner(&game)) {
+        if (game_number < TOTAL_TRAINING) {
+          initBoard(&game, O_MOVE);
+          initPlayer(&p1, &game, PTYPE_RANDOM, O_MOVE);
+          initPlayer(&p2, &game, PTYPE_RANDOM, X_MOVE);
+          turn = &p1;
+          game_number++;
+        } else {
+          isPlaying = 0;
+        }
       } else {
-        turn = &p1;
+        if (turn == &p1) {
+          turn = &p2;
+        } else {
+          turn = &p1;
+        }
       }
+
+      move(21, 1);
     } else if (c == ERR &&
 				(c = getch()) != ERR) {
       if (c == KEYBOARD_BACKSPACE && cmd_buffer_size > 0) {
@@ -69,6 +72,13 @@ int main(void) {
           endwin();
           exit(0);
         }
+
+        isPlaying = 1;
+        initBoard(&game, O_MOVE);
+        initPlayer(&p1, &game, PTYPE_RANDOM, O_MOVE);
+        initPlayer(&p2, &game, PTYPE_RANDOM, X_MOVE);
+        turn = &p1;
+        game_number++;
 
         //TODO: process command
         move(21, 1); 

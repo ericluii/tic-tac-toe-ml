@@ -7,5 +7,6 @@
 #define BLANK_MOVE ' '
 #define X_MOVE 'X'
 #define O_MOVE 'O'
+#define DRAW -1
 
 #define TOTAL_MOVES 9

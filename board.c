@@ -30,13 +30,33 @@ void initBoard(Board *board, char player_start) {
 }
 
 int magicSquareCheck(Board *board, char player) {
-  const int magicSquare[9] = {8, 1, 6, 3, 5, 7, 4, 9, 2};
+  int ms[9] = {8, 1, 6, 3, 5, 7, 4, 9, 2};
 
-  return 0;
+  int i;
+  for (i = 0; i < 9; i++) {
+    if (board->state[i] != player) {
+      ms[i] = 0;
+    }
+  }
+
+  return ((ms[0] + ms[1] + ms[2] == 15) ||
+          (ms[3] + ms[4] + ms[5] == 15) ||
+          (ms[6] + ms[7] + ms[8] == 15) ||
+          (ms[0] + ms[3] + ms[6] == 15) ||
+          (ms[1] + ms[4] + ms[7] == 15) ||
+          (ms[2] + ms[5] + ms[8] == 15) ||
+          (ms[0] + ms[4] + ms[8] == 15) ||
+          (ms[6] + ms[4] + ms[2] == 15));
 }
 
 int findWinner(Board *board) {
   if (board->turn < 5) {
+    return 0;
+  } else if (magicSquareCheck(board, X_MOVE)) {
+    return X_MOVE;
+  } else if (magicSquareCheck(board, O_MOVE)) {
+    return O_MOVE;
+  } else if (board->turn == 9) {
     return -1;
   }
 

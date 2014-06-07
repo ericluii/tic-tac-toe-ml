@@ -13,7 +13,7 @@ void randomPlay(Player* p) {
   Board* board = p->board;
 
   while(!isValidMove(board, p->piece, position)) {
-    position = (position + 1) % 9;
+    position = rand() % 9;
   }
 
   playMove(board, p->piece, position);
@@ -31,8 +31,6 @@ void initPlayer(Player* p, Board* b, p_type type, char piece) {
       p->play = &humanPlay;
       break;
     case PTYPE_RANDOM:
-      srand(time(NULL));
-
       p->play = &randomPlay;
       break;
     case PTYPE_LEARNING:
