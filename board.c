@@ -1,8 +1,23 @@
 #include <curses.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "board.h"
 #include "define.h"
+
+void initKnowledge(Board *board) {
+  board->brain = malloc(sizeof(Knowledge) * BRAIN_SIZE);
+
+  int i, j;
+  for (i = 0; i < BRAIN_SIZE; i++) {
+    for (j = 0; j < 9; j++) {
+      board->brain[i].experience[j] = 0;
+      board->brain[i].wins[j] = 0;
+    }
+
+    board->brain[i].instances = 0;
+  }
+}
 
 void initBoard(Board *board, char player_start) {
 	int i;
