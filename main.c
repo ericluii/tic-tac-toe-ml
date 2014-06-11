@@ -28,10 +28,10 @@ void initScreen(WINDOW *w) {
   printw(">");
 }
 
-void initNewGame(Board* b, Player* p1, Player* p2, Player** turn, char* first_move) {
+void initNewGame(Board* b, Player* p1, Player* p2, p_type p1_type, Player** turn, char* first_move) {
   initBoard(b, *first_move);
-  initPlayer(p1, b, PTYPE_RANDOM, O_MOVE);
-  initPlayer(p2, b, PTYPE_RANDOM, X_MOVE);
+  initPlayer(p1, b, p1_type, O_MOVE);
+  initPlayer(p2, b, PTYPE_LEARNING, X_MOVE);
   
   if (*first_move == O_MOVE) {
     *turn = p1;
@@ -57,23 +57,57 @@ int main(void) {
   // Game Variables
   Board game;
   Player p1, p2, *turn;
-  int game_number = 0, isPlaying = 0;
+  int game_number = 0;
   char starting_player = O_MOVE;
-  int train = 0;
+  int train = 10000, isPlaying;
   int winner;
+  int p1_win = 0, p2_win = 0, draws = 0;
+  p_type type = PTYPE_RANDOM;
 
   // Initialize some game variables
   initKnowledge(&game);
+
+  if (train > 0) {
+    initNewGame(&game, &p1, &p2, type, &turn, &starting_player);
+    game_number++;
+    isPlaying = 1;
+    move(3, 13);
+    printw("%d", game_number);
+  }
 
   FOREVER {
     if (isPlaying) {
       turn->play(turn);
 
-      if (winner = findWinner(&game)) {
+      if ((winner = findWinner(&game))) {
+        if (winner != -1) {
+          if (winner == O_MOVE) {
+            p1_win++;
+
+            move(P1_WIN_POSITION, 15);
+            printw("%d", p1_win);
+          } else {
+            p2_win++;
+
+            move(P2_WIN_POSITION, 15);
+            printw("%d", p2_win);
+          }
+
+          saveKnowledge(&game, winner);
+        } else {
+          draws++;
+
+          move(DRAW_POSITION, 7);
+          printw("%d", draws);
+        }
 
         if (game_number < train) {
-          initNewGame(&game, &p1, &p2, &turn, &starting_player);
+          refresh();
+          usleep(1000);
+          initNewGame(&game, &p1, &p2, type, &turn, &starting_player);
           game_number++;
+          move(3, 13);
+          printw("%d", game_number);
         } else {
           isPlaying = 0;
         }
@@ -100,7 +134,7 @@ int main(void) {
         }
 
         isPlaying = 1;
-        initNewGame(&game, &p1, &p2, &turn, &starting_player);
+        initNewGame(&game, &p1, &p2, type, &turn, &starting_player);
         game_number++;
 
         move(3, 13);

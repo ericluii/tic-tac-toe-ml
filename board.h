@@ -19,7 +19,6 @@ typedef struct _move {
 
 typedef struct _board {
 	char state[9];
-  char firstMove;
 	char playerturn;
 
   Knowledge* brain;
@@ -28,7 +27,9 @@ typedef struct _board {
 } Board;
 
 void initKnowledge(Board *board);
+int encodeBoardState(Board *board, char player_piece);
 void initBoard(Board *board, char player_start);
+void saveKnowledge(Board *board, char winner);
 int findWinner(Board *board);
 int isValidMove(Board *board, char piece, int position);
 void playMove(Board *board, char piece, int position);

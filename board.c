@@ -19,6 +19,26 @@ void initKnowledge(Board *board) {
   }
 }
 
+void saveKnowledge(Board *board, char winner) {
+	move(30, 0);
+
+	int i;
+	for (i = board->turn - 1; i >= 0; i--) {
+		if (board->history[i].player == winner) {
+			board->brain[board->history[i].encodedState].experience[board->history[i].position] += 10;
+			board->brain[board->history[i].encodedState].wins[board->history[i].position]++;
+		} else {
+			board->brain[board->history[i].encodedState].experience[board->history[i].position] -= 10;
+		}
+
+		board->brain[board->history[i].encodedState].instances++;
+
+		printw("Player: %c, Turn: %d, State: %d, Move: %d, Experience: %d, Wins: %d, Instances: %d\n", board->history[i].player, i, board->history[i].encodedState, board->history[i].position, board->brain[board->history[i].encodedState].experience[board->history[i].position], board->brain[board->history[i].encodedState].wins[board->history[i].position], board->brain[board->history[i].encodedState].instances);
+	}
+
+	clrtobot();
+}
+
 void initBoard(Board *board, char player_start) {
 	int i;
 
@@ -26,8 +46,7 @@ void initBoard(Board *board, char player_start) {
 		board->state[i] = BLANK_MOVE;
 	}
 
-  board->firstMove = player_start;
-	board->playerturn = player_start;
+  board->playerturn = player_start;
   board->turn = 0;
 
   move(BOARD_Y_POS - 1, BOARD_X_POS - 4);
@@ -83,13 +102,13 @@ int isValidMove(Board *board, char piece, int position) {
          board->playerturn == piece;
 }
 
-int encodeBoardState(Board *board) {
+int encodeBoardState(Board *board, char player_piece) {
   int encoding = 0;
 
   int i;
   for (i = 0; i < 9; i++) {
     if (board->state[i] != BLANK_MOVE) {
-      if (board->state[i] == board->firstMove) {
+      if (board->state[i] == player_piece) {
         encoding += (1 << i);
       } else {
         encoding += (1 << (9 + i));
@@ -101,7 +120,7 @@ int encodeBoardState(Board *board) {
 }
 
 void playMove(Board *board, char piece, int position) {
-  board->history[board->turn].encodedState = encodeBoardState(board);
+  board->history[board->turn].encodedState = encodeBoardState(board, piece);
   board->history[board->turn].position = position;
   board->history[board->turn].player = piece;
 
