@@ -19,16 +19,18 @@ void initKnowledge(Board *board) {
   }
 }
 
-void saveKnowledge(Board *board, char winner) {
+void saveKnowledge(Board *board, int winner) {
 	move(30, 0);
 
 	int i;
 	for (i = board->turn - 1; i >= 0; i--) {
-		if (board->history[i].player == winner) {
-			board->brain[board->history[i].encodedState].experience[board->history[i].position] += 10;
+    if (winner == -1) {
+      board->brain[board->history[i].encodedState].experience[board->history[i].position]--;
+    } else if (board->history[i].player == winner) {
+			board->brain[board->history[i].encodedState].experience[board->history[i].position] += 5*i;
 			board->brain[board->history[i].encodedState].wins[board->history[i].position]++;
 		} else {
-			board->brain[board->history[i].encodedState].experience[board->history[i].position] -= 10;
+			board->brain[board->history[i].encodedState].experience[board->history[i].position] -= 5*i;
 		}
 
 		board->brain[board->history[i].encodedState].instances++;

@@ -59,7 +59,7 @@ int main(void) {
   Player p1, p2, *turn;
   int game_number = 0;
   char starting_player = O_MOVE;
-  int train = 10000, isPlaying;
+  int train = 0, trainCount = 0, isPlaying;
   int winner;
   int p1_win = 0, p2_win = 0, draws = 0;
   p_type type = PTYPE_RANDOM;
@@ -68,6 +68,7 @@ int main(void) {
   initKnowledge(&game);
 
   if (train > 0) {
+    trainCount = train - 1;
     initNewGame(&game, &p1, &p2, type, &turn, &starting_player);
     game_number++;
     isPlaying = 1;
@@ -80,20 +81,16 @@ int main(void) {
       turn->play(turn);
 
       if ((winner = findWinner(&game))) {
-        if (winner != -1) {
-          if (winner == O_MOVE) {
-            p1_win++;
+        if (winner == O_MOVE) {
+          p1_win++;
 
-            move(P1_WIN_POSITION, 15);
-            printw("%d", p1_win);
-          } else {
-            p2_win++;
+          move(P1_WIN_POSITION, 15);
+          printw("%d", p1_win);
+        } else if (winner == X_MOVE) {
+          p2_win++;
 
-            move(P2_WIN_POSITION, 15);
-            printw("%d", p2_win);
-          }
-
-          saveKnowledge(&game, winner);
+          move(P2_WIN_POSITION, 15);
+          printw("%d", p2_win);
         } else {
           draws++;
 
@@ -101,9 +98,12 @@ int main(void) {
           printw("%d", draws);
         }
 
-        if (game_number < train) {
+        saveKnowledge(&game, winner);
+
+        if (trainCount) {
+          trainCount--;
           refresh();
-          usleep(1000);
+          usleep(10);
           initNewGame(&game, &p1, &p2, type, &turn, &starting_player);
           game_number++;
           move(3, 13);
@@ -131,14 +131,37 @@ int main(void) {
           endwin();
           free(game.brain);
           exit(0);
+        } else if (cmd_buffer_size == 1 && cmd_buffer[0] == KEYBOARD_C) {
+          p1_win = 0;
+          p2_win = 0;
+          draws = 0;
+
+          move(P1_WIN_POSITION, 15);
+          clrtoeol();
+          printw("0");
+          move(P2_WIN_POSITION, 15);
+          clrtoeol();
+          printw("0");
+          move(DRAW_POSITION, 7);
+          clrtoeol();
+          printw("0");
+        } else if (cmd_buffer_size == 1 && cmd_buffer[0] == KEYBOARD_H) {
+          type = PTYPE_HUMAN;
+        } else if (cmd_buffer_size == 1 && cmd_buffer[0] == KEYBOARD_R) {
+          type = PTYPE_RANDOM;
+        } else if (cmd_buffer_size == 1 && cmd_buffer[0] == KEYBOARD_M) {
+          type = PTYPE_LEARNING;
+        } else if (cmd_buffer_size > 0 && !(cmd_buffer_size == 1 && cmd_buffer[0] == KEYBOARD_G)) {
+          train = atoi(cmd_buffer);
+        } else if (cmd_buffer_size == 1 && cmd_buffer[0] == KEYBOARD_G) {
+          trainCount = train - 1;
+          isPlaying = 1;
+          initNewGame(&game, &p1, &p2, type, &turn, &starting_player);
+          game_number++;
+
+          move(3, 13);
+          printw("%d", game_number);
         }
-
-        isPlaying = 1;
-        initNewGame(&game, &p1, &p2, type, &turn, &starting_player);
-        game_number++;
-
-        move(3, 13);
-        printw("%d", game_number);
 
         //TODO: process command
         move(CURSOR_POSITION, 1); 

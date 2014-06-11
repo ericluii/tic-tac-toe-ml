@@ -29,7 +29,7 @@ typedef struct _board {
 void initKnowledge(Board *board);
 int encodeBoardState(Board *board, char player_piece);
 void initBoard(Board *board, char player_start);
-void saveKnowledge(Board *board, char winner);
+void saveKnowledge(Board *board, int winner);
 int findWinner(Board *board);
 int isValidMove(Board *board, char piece, int position);
 void playMove(Board *board, char piece, int position);
