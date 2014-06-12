@@ -32,7 +32,7 @@ void initNewGame(Board* b, Player* p1, Player* p2, p_type p1_type, Player** turn
   initBoard(b, *first_move);
   initPlayer(p1, b, p1_type, O_MOVE);
   initPlayer(p2, b, PTYPE_LEARNING, X_MOVE);
-  
+
   if (*first_move == O_MOVE) {
     *turn = p1;
     *first_move = X_MOVE;
@@ -164,7 +164,7 @@ int main(void) {
         }
 
         //TODO: process command
-        move(CURSOR_POSITION, 1); 
+        move(CURSOR_POSITION, 1);
         clrtoeol();
         cmd_buffer[0] = '\0';
         cmd_buffer_size = 0;

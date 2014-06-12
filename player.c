@@ -8,7 +8,7 @@ void humanPlay(Player* p) {
 }
 
 void randomPlay(Player* p) {
-  int position = rand() % 9; 
+  int position = rand() % 9;
 
   Board* board = p->board;
 
@@ -33,7 +33,7 @@ void learningPlay(Player* p) {
       bestMove = i;
     }
   }
-  
+
   playMove(board, p->piece, bestMove);
 }
 

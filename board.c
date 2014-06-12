@@ -20,49 +20,49 @@ void initKnowledge(Board *board) {
 }
 
 void saveKnowledge(Board *board, int winner) {
-	move(30, 0);
+  move(30, 0);
 
-	int i;
-	for (i = board->turn - 1; i >= 0; i--) {
+  int i;
+  for (i = board->turn - 1; i >= 0; i--) {
     if (winner == -1) {
       board->brain[board->history[i].encodedState].experience[board->history[i].position]--;
     } else if (board->history[i].player == winner) {
-			board->brain[board->history[i].encodedState].experience[board->history[i].position] += 5*i;
-			board->brain[board->history[i].encodedState].wins[board->history[i].position]++;
-		} else {
-			board->brain[board->history[i].encodedState].experience[board->history[i].position] -= 5*i;
-		}
+      board->brain[board->history[i].encodedState].experience[board->history[i].position] += 5*i;
+      board->brain[board->history[i].encodedState].wins[board->history[i].position]++;
+    } else {
+      board->brain[board->history[i].encodedState].experience[board->history[i].position] -= 5*i;
+    }
 
-		board->brain[board->history[i].encodedState].instances++;
+    board->brain[board->history[i].encodedState].instances++;
 
-		printw("Player: %c, Turn: %d, State: %d, Move: %d, Experience: %d, Wins: %d, Instances: %d\n", board->history[i].player, i, board->history[i].encodedState, board->history[i].position, board->brain[board->history[i].encodedState].experience[board->history[i].position], board->brain[board->history[i].encodedState].wins[board->history[i].position], board->brain[board->history[i].encodedState].instances);
-	}
+    printw("Player: %c, Turn: %d, State: %d, Move: %d, Experience: %d, Wins: %d, Instances: %d\n", board->history[i].player, i, board->history[i].encodedState, board->history[i].position, board->brain[board->history[i].encodedState].experience[board->history[i].position], board->brain[board->history[i].encodedState].wins[board->history[i].position], board->brain[board->history[i].encodedState].instances);
+  }
 
-	clrtobot();
+  clrtobot();
 }
 
 void initBoard(Board *board, char player_start) {
-	int i;
+  int i;
 
-	for (i = 0; i < TOTAL_MOVES; i++) {
-		board->state[i] = BLANK_MOVE;
-	}
+  for (i = 0; i < TOTAL_MOVES; i++) {
+    board->state[i] = BLANK_MOVE;
+  }
 
   board->playerturn = player_start;
   board->turn = 0;
 
   move(BOARD_Y_POS - 1, BOARD_X_POS - 4);
-	printw("      |   |   \n");
-	printw("      |   |   \n");
-	printw("      |   |   \n");
-	printw("   ---+---+---\n");
-	printw("      |   |   \n");
-	printw("      |   |   \n");
-	printw("      |   |   \n");
-	printw("   ---+---+---\n");
-	printw("      |   |   \n");
-	printw("      |   |   \n");
-	printw("      |   |   \n\n\n");
+  printw("      |   |   \n");
+  printw("      |   |   \n");
+  printw("      |   |   \n");
+  printw("   ---+---+---\n");
+  printw("      |   |   \n");
+  printw("      |   |   \n");
+  printw("      |   |   \n");
+  printw("   ---+---+---\n");
+  printw("      |   |   \n");
+  printw("      |   |   \n");
+  printw("      |   |   \n\n\n");
 }
 
 int magicSquareCheck(Board *board, char player) {
@@ -100,7 +100,7 @@ int findWinner(Board *board) {
 }
 
 int isValidMove(Board *board, char piece, int position) {
-	return board->state[position] == BLANK_MOVE &&
+  return board->state[position] == BLANK_MOVE &&
          board->playerturn == piece;
 }
 
@@ -126,7 +126,7 @@ void playMove(Board *board, char piece, int position) {
   board->history[board->turn].position = position;
   board->history[board->turn].player = piece;
 
-	board->state[position] = piece;
+  board->state[position] = piece;
   if (piece == X_MOVE) {
     board->playerturn = O_MOVE;
   } else {

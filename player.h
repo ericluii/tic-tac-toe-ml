@@ -4,7 +4,7 @@
 #include "board.h"
 
 typedef enum _p_type {
-  PTYPE_HUMAN, 
+  PTYPE_HUMAN,
   PTYPE_RANDOM,
   PTYPE_LEARNING
 } p_type;

@@ -18,8 +18,8 @@ typedef struct _move {
 } Move;
 
 typedef struct _board {
-	char state[9];
-	char playerturn;
+  char state[9];
+  char playerturn;
 
   Knowledge* brain;
   Move history[9];
