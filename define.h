@@ -1,5 +1,6 @@
 #define FOREVER for(;;)
 
+#define KEYBOARD_A 97
 #define KEYBOARD_C 99
 #define KEYBOARD_G 103
 #define KEYBOARD_H 104

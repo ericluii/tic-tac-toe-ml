@@ -1,8 +1,9 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <time.h>
 
 #include "define.h"
-#include "Player.h"
+#include "player.h"
 
 void humanPlay(Player* p) {
 }
@@ -37,6 +38,37 @@ void learningPlay(Player* p) {
   playMove(board, p->piece, bestMove);
 }
 
+void aiPlay(Player* p) {
+
+  Board* board = p->board;
+  int i = 0;
+  for (i = 0; i < 9; i++){
+    if(board->state[i] == BLANK_MOVE){
+      board->state[i] = X_MOVE;
+      if(findWinner(board)){
+        board->state[i] = BLANK_MOVE;
+        playMove(board, p->piece, i);
+        return;
+      }
+      board->state[i] = O_MOVE;
+      if(findWinner(board)){
+        board->state[i] = BLANK_MOVE;
+        playMove(board, p->piece, i);
+        return;
+      }
+      board->state[i] = BLANK_MOVE;
+    }
+  }
+
+  int position = rand() % 9;
+
+  while(!isValidMove(board, p->piece, position)) {
+    position = rand() % 9;
+  }
+
+  playMove(board, p->piece, position);
+}
+
 void initPlayer(Player* p, Board* b, p_type type, char piece) {
   p->board = b;
   p->piece = piece;
@@ -51,6 +83,8 @@ void initPlayer(Player* p, Board* b, p_type type, char piece) {
     case PTYPE_LEARNING:
       p->play = &learningPlay;
       break;
+    case PTYPE_AI:
+      p->play = &aiPlay;
     default:
       // This should never happen
       // Exit gracefully or something? idk
