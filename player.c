@@ -38,26 +38,6 @@ void learningPlay(Player* p) {
   playMove(board, p->piece, bestMove);
 }
 
-int isWinningMove(Board *board, char player) {
-  int ms[9] = {8, 1, 6, 3, 5, 7, 4, 9, 2};
-
-  int i;
-  for (i = 0; i < 9; i++) {
-    if (board->state[i] != player) {
-      ms[i] = 0;
-    }
-  }
-
-  return ((ms[0] + ms[1] + ms[2] == 15) ||
-          (ms[3] + ms[4] + ms[5] == 15) ||
-          (ms[6] + ms[7] + ms[8] == 15) ||
-          (ms[0] + ms[3] + ms[6] == 15) ||
-          (ms[1] + ms[4] + ms[7] == 15) ||
-          (ms[2] + ms[5] + ms[8] == 15) ||
-          (ms[0] + ms[4] + ms[8] == 15) ||
-          (ms[6] + ms[4] + ms[2] == 15));
-}
-
 void seikunPlay(Player* p) {
 
   Board* board = p->board;
