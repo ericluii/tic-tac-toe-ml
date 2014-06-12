@@ -149,8 +149,8 @@ int main(void) {
           type = PTYPE_HUMAN;
         } else if (cmd_buffer_size == 1 && cmd_buffer[0] == KEYBOARD_R) {
           type = PTYPE_RANDOM;
-        } else if (cmd_buffer_size == 1 && cmd_buffer[0] == KEYBOARD_S) {
-          type = PTYPE_SEIKUNATOR;
+        } else if (cmd_buffer_size == 1 && cmd_buffer[0] == KEYBOARD_A) {
+          type = PTYPE_AI;
         } else if (cmd_buffer_size == 1 && cmd_buffer[0] == KEYBOARD_M) {
           type = PTYPE_LEARNING;
         } else if (cmd_buffer_size > 0 && !(cmd_buffer_size == 1 && cmd_buffer[0] == KEYBOARD_G)) {

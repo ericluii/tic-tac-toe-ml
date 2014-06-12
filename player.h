@@ -6,7 +6,7 @@
 typedef enum _p_type {
   PTYPE_HUMAN,
   PTYPE_RANDOM,
-  PTYPE_SEIKUNATOR,
+  PTYPE_AI,
   PTYPE_LEARNING
 } p_type;
 

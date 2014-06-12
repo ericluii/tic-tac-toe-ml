@@ -38,7 +38,7 @@ void learningPlay(Player* p) {
   playMove(board, p->piece, bestMove);
 }
 
-void seikunPlay(Player* p) {
+void aiPlay(Player* p) {
 
   Board* board = p->board;
   int i = 0;
@@ -83,8 +83,8 @@ void initPlayer(Player* p, Board* b, p_type type, char piece) {
     case PTYPE_LEARNING:
       p->play = &learningPlay;
       break;
-    case PTYPE_SEIKUNATOR:
-      p->play = &seikunPlay;
+    case PTYPE_AI:
+      p->play = &aiPlay;
     default:
       // This should never happen
       // Exit gracefully or something? idk
