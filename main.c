@@ -56,10 +56,10 @@ int main(void) {
 
   // Game Variables
   Board game;
-  Player p1, p2, *turn;
+  Player p1, p2, *turn = 0x0;
   int game_number = 0;
   char starting_player = O_MOVE;
-  int train = 0, trainCount = 0, isPlaying;
+  int train = 0, trainCount = 0, isPlaying = 0;
   int winner;
   int p1_win = 0, p2_win = 0, draws = 0;
   p_type type = PTYPE_RANDOM;
