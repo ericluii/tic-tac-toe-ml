@@ -48,13 +48,13 @@ void seikunPlay(Player* p) {
       if(findWinner(board)){
         board->state[i] = BLANK_MOVE;
         playMove(board, p->piece, i);
-        break;
+        return;
       }
       board->state[i] = O_MOVE;
       if(findWinner(board)){
         board->state[i] = BLANK_MOVE;
         playMove(board, p->piece, i);
-        break;
+        return;
       }
       board->state[i] = BLANK_MOVE;
     }
